@@ -1,107 +1,67 @@
 package pt.rumos.mymovies.controller;
 
-import jakarta.validation.Valid;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
-import pt.rumos.mymovies.dto.MovieRequest;
-import pt.rumos.mymovies.dto.MovieResponse;
-import pt.rumos.mymovies.dto.RatingUpdateRequest;
-import pt.rumos.mymovies.model.Movie;
 import org.springframework.web.bind.annotation.*;
-import pt.rumos.mymovies.service.MovieService;
+import pt.rumos.mymovies.model.Movie;
 
-import java.net.URI;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.OptionalInt;
 
 @RestController
 @RequestMapping("/api/movies")
 public class MovieController {
 
-    private final MovieService movieService;
+    //Lista fixa em memória com 22 filmes para testes e validação
+    private final List<Movie> movies = List.of(
+            new Movie(1L, "Interstellar", "Christopher Nolan", 2014),
+            new Movie(2L, "The Matrix", "Lana & Lilly Wachowski", 1999),
+            new Movie(3L, "Inception", "Christopher Nolan", 2010),
+            new Movie(4L, "The Dark Knight", "Christopher Nolan", 2008),
+            new Movie(5L, "Pulp Fiction", "Quentin Tarantino", 1994),
+            new Movie(6L, "The Godfather", "Francis Ford Coppola", 1972),
+            new Movie(7L, "Fight Club", "David Fincher", 1999),
+            new Movie(8L, "Forrest Gump", "Robert Zemeckis", 1994),
+            new Movie(9L, "The Lord of the Rings: The Fellowship of the Ring", "Peter Jackson", 2001),
+            new Movie(10L, "Star Wars: Episode V - The Empire Strikes Back", "Irvin Kershner", 1980),
+            new Movie(11L, "The Matrix Reloaded", "Lana & Lilly Wachowski", 2003),
+            new Movie(12L, "The Matrix Revolutions", "Lana & Lilly Wachowski", 2003),
+            new Movie(13L, "Gladiator", "Ridley Scott", 2000),
+            new Movie(14L, "Back to the Future", "Robert Zemeckis", 1985),
+            new Movie(15L, "Jurassic Park", "Steven Spielberg", 1993),
+            new Movie(16L, "Alien", "Ridley Scott", 1979),
+            new Movie(17L, "Blade Runner 2049", "Denis Villeneuve", 2017),
+            new Movie(18L, "Dune", "Denis Villeneuve", 2021),
+            new Movie(19L, "Dune: Part Two", "Denis Villeneuve", 2024),
+            new Movie(20L, "Oppenheimer", "Christopher Nolan", 2023),
+            new Movie(21L, "Avatar", "James Cameron", 2009)
+            );
 
-    public MovieController(MovieService movieService) {
-        this.movieService = movieService;
-    }
 
-    /**
-     * Endpoint 1: Busca todos os filmes ou por parte do título (case-insensitive).
-     * HTTP GET /api/movies?title=matrix
-     */
     @GetMapping
-    public ResponseEntity<List<MovieResponse>> list(@RequestParam(required = false) String title) {
-        List<MovieResponse> response = movieService.findAll(title);
-        return ResponseEntity.ok(response);
+    public List<Movie> listAll() {
+        return movies;
     }
 
-    /**
-     * Endpoint 2: Busca um filme individual pelo seu ID.
-     * HTTP GET /api/movies/{id}
-     */
     @GetMapping("/{id}")
-    public ResponseEntity<MovieResponse> getById(@PathVariable Long id) {
-        var optionalMovie = movieService.findById(id);
-        if (optionalMovie.isEmpty()) {
-            return ResponseEntity.notFound().build();
-        }
-        return ResponseEntity.ok(optionalMovie.get());
+    public Movie getById(@PathVariable Long id) {
+        return movies.stream()
+                .filter(movie -> movie.getId().equals(id))
+                .findFirst()
+                .orElse(null);
     }
 
+    @GetMapping("/search")
+    public List<Movie> searchByTitle(
+            @RequestParam(required = false) String title) {
 
-    /**
-     * Endpoint 4: Cria um novo filme.
-     * HTTP POST /api/movies
-     */
-    @PostMapping
-    public ResponseEntity<MovieResponse> create(@Valid @RequestBody MovieRequest request) {
-        MovieResponse created = movieService.create(request);
-
-        URI location = ServletUriComponentsBuilder
-                .fromCurrentRequest()
-                .path("/{id}")
-                .buildAndExpand(created.id())
-                .toUri();
-
-        return ResponseEntity.created(location).body(created);
-    }
-
-    /**
-     * Endpoint 5: Altera dados de um file existente
-     * HTTP PUT /api/movies/{id}
-     */
-    @PutMapping("/{id}")
-    public ResponseEntity<MovieResponse> update(@PathVariable Long id,
-                                                @Valid @RequestBody MovieRequest request
-    ) {
-        MovieResponse updatedMovie = movieService.update(id, request);
-        if(updatedMovie == null){
-            return ResponseEntity.notFound().build();
+        if (title == null || title.isBlank()) {
+            return movies;
         }
 
-        return ResponseEntity.ok(updatedMovie);
+        return movies.stream()
+                .filter(movie -> movie.getTitle()
+                                .toLowerCase()
+                                .contains(title.toLowerCase()))
+                .toList();
     }
 
-    /**
-     * Endpoint 6: Remove um filme
-     * HTTP DELETE /api/movies/{id}
-     */
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Void> delete(@PathVariable Long id) {
-        boolean removed = movieService.delete(id);
-        if (removed) {
-            return ResponseEntity.noContent().build();
-        }
-        return ResponseEntity.notFound().build();
-    }
-
-    @PatchMapping("/{id}/rating")
-    public ResponseEntity<MovieResponse> updateRating(@PathVariable Long id, @Valid @RequestBody RatingUpdateRequest request) {
-        var optionalMovieResponse = movieService.updateRating(id,request);
-
-        if (optionalMovieResponse.isEmpty()) {
-            return ResponseEntity.notFound().build();
-        }
-        return ResponseEntity.ok(optionalMovieResponse.get());
-    }
 }
+
