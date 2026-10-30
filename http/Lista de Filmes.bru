@@ -1,0 +1,17 @@
+meta {
+  name: Lista de Filmes
+  type: http
+  seq: 2
+}
+
+get {
+  url: {{baseUrl}}/api/movies
+  body: json
+  auth: inherit
+}
+
+settings {
+  encodeUrl: true
+  timeout: 0
+  forwardAuthorizationHeader: false
+}
