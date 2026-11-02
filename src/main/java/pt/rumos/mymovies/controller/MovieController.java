@@ -1,8 +1,15 @@
 package pt.rumos.mymovies.controller;
 
+import jakarta.validation.Valid;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
+import pt.rumos.mymovies.dto.MovieRequest;
+import pt.rumos.mymovies.dto.MovieResponse;
 import pt.rumos.mymovies.model.Movie;
 import org.springframework.web.bind.annotation.*;
 
+import java.net.URI;
+import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -10,7 +17,7 @@ import java.util.List;
 public class MovieController {
 
     // Lista fixa em memória com 22 filmes para testes e validação
-    private final List<Movie> movies = List.of(
+    private final List<Movie> movies = new ArrayList<>(List.of(
             new Movie(1L, "Interstellar", "Christopher Nolan", 2014),
             new Movie(2L, "The Matrix", "Lana & Lilly Wachowski", 1999),
             new Movie(3L, "Inception", "Christopher Nolan", 2010),
@@ -32,24 +39,29 @@ public class MovieController {
             new Movie(19L, "Dune: Part Two", "Denis Villeneuve", 2024),
             new Movie(20L, "Oppenheimer", "Christopher Nolan", 2023),
             new Movie(21L, "Avatar", "James Cameron", 2009)
-    );
+    ));
 
     /**
      * Endpoint 1: Retorna todos os filmes cadastrados.
      * HTTP GET /api/movies
      */
     @GetMapping
-    public List<Movie> listAll() {
-        return movies;
+    public ResponseEntity<List<MovieResponse>> listAll() {
+        List<MovieResponse> response = movies.stream()
+                .map(MovieResponse::fromDomain)
+                .toList();
+        return ResponseEntity.ok(response);
     }
+
 
     /**
      * Endpoint 2: Busca um filme individual pelo seu ID.
      * HTTP GET /api/movies/{id}
      */
     @GetMapping("/{id}")
-    public Movie getById(@PathVariable Long id) {
+    public MovieResponse getById(@PathVariable Long id) {
         return movies.stream()
+                .map(MovieResponse::fromDomain)
                 .filter(m -> m.id().equals(id))
                 .findFirst()
                 .orElse(null);
@@ -60,13 +72,57 @@ public class MovieController {
      * HTTP GET /api/movies/search?title=matrix
      */
     @GetMapping("/search")
-    public List<Movie> searchByTitle(@RequestParam(required = false) String title) {
+    public List<MovieResponse> searchByTitle(@RequestParam(required = false) String title) {
         if (title == null || title.isBlank()) {
-            return movies;
+            return movies.stream()
+                    .map(MovieResponse::fromDomain)
+                    .toList();
         }
         String term = title.trim().toLowerCase();
         return movies.stream()
+                .map(MovieResponse::fromDomain)
                 .filter(m -> m.title().toLowerCase().contains(term))
                 .toList();
     }
+
+    @PostMapping
+    public ResponseEntity<MovieResponse> create(@Valid @RequestBody MovieRequest request) {
+        Long newId = (long) (movies.size() + 1);
+        Movie newMovie = new Movie(newId, request.title(), request.director(), request.year());
+        movies.add(newMovie);
+
+        URI location = ServletUriComponentsBuilder
+                .fromCurrentRequest()
+                .path("/{id}")
+                .buildAndExpand(newId)
+                .toUri();
+
+        return ResponseEntity.created(location).body(MovieResponse.fromDomain(newMovie));
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<MovieResponse> update(@PathVariable Long id,
+                                                @Valid @RequestBody MovieRequest request
+    ) {
+        var optionalMovie = movies.stream().filter(m -> m.id().equals(id)).findFirst();
+        if (optionalMovie.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        }
+        Movie current = optionalMovie.get();
+        Movie updated = new Movie(current.id(), request.title(), request.director(), request.year());
+        int index = movies.indexOf(current);
+        movies.set(index, updated);
+
+        return ResponseEntity.ok(MovieResponse.fromDomain(updated));
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> delete(@PathVariable Long id) {
+        boolean removed = movies.removeIf(m -> m.id().equals(id));
+        if (removed) {
+            return ResponseEntity.noContent().build();
+        }
+        return ResponseEntity.notFound().build();
+    }
+
 }
