@@ -1,16 +1,23 @@
 package pt.rumos.mymovies.controller;
 
+import jakarta.validation.Valid;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import pt.rumos.mymovies.dto.MovieRequest;
+import pt.rumos.mymovies.dto.MovieResponse;
 import pt.rumos.mymovies.model.Movie;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/movies")
 public class MovieController {
 
     //Lista fixa em memória com 22 filmes para testes e validação
-    private final List<Movie> movies = List.of(
+    private final List<Movie> movies = new ArrayList<>(List.of(
             new Movie(1L, "Interstellar", "Christopher Nolan", 2014),
             new Movie(2L, "The Matrix", "Lana & Lilly Wachowski", 1999),
             new Movie(3L, "Inception", "Christopher Nolan", 2010),
@@ -32,7 +39,7 @@ public class MovieController {
             new Movie(19L, "Dune: Part Two", "Denis Villeneuve", 2024),
             new Movie(20L, "Oppenheimer", "Christopher Nolan", 2023),
             new Movie(21L, "Avatar", "James Cameron", 2009)
-            );
+            ));
 
 
     @GetMapping
@@ -62,6 +69,75 @@ public class MovieController {
                                 .contains(title.toLowerCase()))
                 .toList();
     }
+
+
+
+
+// TODO: Implementar POST /api/movies -> Com @Valid @RequestBody e 201 Created
+@PostMapping
+public ResponseEntity<MovieResponse> create(
+        @Valid @RequestBody MovieRequest request) {
+
+    Long nextId = movies.stream()
+            .mapToLong(Movie::getId)
+            .max()
+            .orElse(0L) + 1;
+
+    Movie movie = new Movie(
+            nextId,
+            request.title(),
+            request.director(),
+            request.year()
+    );
+
+    movies.add(movie);
+
+    return ResponseEntity
+            .status(HttpStatus.CREATED)
+            .body(MovieResponse.fromDomain(movie));
+}
+// TODO: Implementar PUT /api/movies/{id} -> Com @Valid, 200 OK ou 404 Not Found
+@PutMapping("/{id}")
+public ResponseEntity<MovieResponse> update(
+        @PathVariable Long id,
+        @Valid @RequestBody MovieRequest request) {
+
+    Optional<Movie> optionalMovie = movies.stream()
+            .filter(movie -> movie.getId().equals(id))
+            .findFirst();
+
+    if (optionalMovie.isEmpty()) {
+        return ResponseEntity.notFound().build();
+    }
+
+    Movie movie = optionalMovie.get();
+
+    movie.setTitle(request.title());
+    movie.setDirector(request.director());
+    movie.setYear(request.year());
+
+    return ResponseEntity.ok(
+            MovieResponse.fromDomain(movie)
+    );
+}
+
+// TODO: Implementar DELETE /api/movies/{id} -> Retornar 204 No Content ou 404 Not
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> delete(@PathVariable Long id) {
+
+        boolean removed = movies.removeIf(
+                movie -> movie.getId().equals(id)
+        );
+
+        if (!removed) {
+            return ResponseEntity.notFound().build();
+        }
+
+        return ResponseEntity.noContent().build();
+    }
+
+
 
 }
 
