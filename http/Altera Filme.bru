@@ -1,0 +1,25 @@
+meta {
+  name: Altera Filme
+  type: http
+  seq: 5
+}
+
+put {
+  url: {{baseURL}}/api/movies/22
+  body: json
+  auth: inherit
+}
+
+body:json {
+  {
+      "title": "Alterou",
+      "director": "Braulio Moura",
+      "year": 2013
+  }
+}
+
+settings {
+  encodeUrl: true
+  timeout: 0
+  forwardAuthorizationHeader: false
+}

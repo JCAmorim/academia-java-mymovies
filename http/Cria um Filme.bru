@@ -1,0 +1,25 @@
+meta {
+  name: Cria um Filme
+  type: http
+  seq: 4
+}
+
+post {
+  url: {{baseURL}}/api/movies
+  body: json
+  auth: inherit
+}
+
+body:json {
+  {
+      "title": "World War Z",
+      "director": "Marc Forster",
+      "year": 2013
+  }
+}
+
+settings {
+  encodeUrl: true
+  timeout: 0
+  forwardAuthorizationHeader: false
+}

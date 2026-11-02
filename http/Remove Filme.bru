@@ -1,0 +1,16 @@
+meta {
+  name: Remove Filme
+  type: http
+  seq: 6
+}
+
+delete {
+  url: {{baseURL}}/api/movies/22
+  body: none
+  auth: inherit
+}
+
+settings {
+  encodeUrl: true
+  forwardAuthorizationHeader: false
+}
