@@ -5,6 +5,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import pt.rumos.mymovies.dto.MovieRequest;
 import pt.rumos.mymovies.dto.MovieResponse;
+import pt.rumos.mymovies.dto.RatingUpdateRequest;
 import pt.rumos.mymovies.model.Movie;
 import org.springframework.web.bind.annotation.*;
 
@@ -125,4 +126,19 @@ public class MovieController {
         return ResponseEntity.notFound().build();
     }
 
+    @PatchMapping("/{id}/rating")
+    public ResponseEntity<MovieResponse> updateRating(@PathVariable Long id, @Valid @RequestBody RatingUpdateRequest request) {
+        var optionalMovie = movies.stream().filter(m -> m.id().equals(id)).findFirst();
+
+        if (optionalMovie.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        }
+
+        Movie current = optionalMovie.get();
+        Movie updated = new Movie(current.id(), current.title(), current.director(), current.year(), request.rating());
+        int index = movies.indexOf(current);
+        movies.set(index, updated);
+
+        return ResponseEntity.ok(MovieResponse.fromDomain(updated));
+    }
 }

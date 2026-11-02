@@ -6,7 +6,8 @@ public record MovieResponse(
         Long id,
         String title,
         String director,
-        Integer year
+        Integer year,
+        Double rating
 ) {
 
     /**
@@ -19,8 +20,8 @@ public record MovieResponse(
         if (movie == null) {
             return null;
         }
-
-        return new MovieResponse(movie.id(), movie.title(), movie.director(), movie.year());
+        return new MovieResponse(movie.id(), movie.title(), movie.director(),
+                                        movie.year(), movie.rating());
     }
 
 }
