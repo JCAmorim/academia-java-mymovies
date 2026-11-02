@@ -25,4 +25,24 @@ public class Movie {
     public String getTitle() {
         return title;
     }
+
+    public String getDirector() {
+        return director;
+    }
+
+    public int getYear() {
+        return year;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public void setDirector(String director) {
+        this.director = director;
+    }
+
+    public void setYear(int year) {
+        this.year = year;
+    }
 }
