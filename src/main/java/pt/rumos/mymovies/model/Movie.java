@@ -9,6 +9,7 @@ public class Movie {
     private String title;
     private String director;
     private int year;
+    Double rating;
 
 
     public Movie(long id, String title, String director, int year) {
@@ -44,5 +45,9 @@ public class Movie {
 
     public void setYear(int year) {
         this.year = year;
+    }
+
+    public void setRating(Double rating) {
+        this.rating = rating;
     }
 }
