@@ -26,15 +26,14 @@ public class MovieController {
     }
 
     /**
-     * Endpoint 1: Retorna todos os filmes cadastrados.
-     * HTTP GET /api/movies
+     * Endpoint 1: Busca todos os filmes ou por parte do título (case-insensitive).
+     * HTTP GET /api/movies?title=matrix
      */
     @GetMapping
-    public ResponseEntity<List<MovieResponse>> listAll() {
-        List<MovieResponse> response = movieService.findAll();
+    public ResponseEntity<List<MovieResponse>> list(@RequestParam(required = false) String title) {
+        List<MovieResponse> response = movieService.findAll(title);
         return ResponseEntity.ok(response);
     }
-
 
     /**
      * Endpoint 2: Busca um filme individual pelo seu ID.
@@ -49,15 +48,6 @@ public class MovieController {
         return ResponseEntity.ok(optionalMovie.get());
     }
 
-    /**
-     * Endpoint 3: Busca filmes por parte do título (case-insensitive).
-     * HTTP GET /api/movies/search?title=matrix
-     */
-    @GetMapping("/search")
-    public ResponseEntity<List<MovieResponse>> searchByTitle(@RequestParam(required = false) String title) {
-        List<MovieResponse> response = movieService.findAll(title);
-        return ResponseEntity.ok(response);
-    }
 
     /**
      * Endpoint 4: Cria um novo filme.

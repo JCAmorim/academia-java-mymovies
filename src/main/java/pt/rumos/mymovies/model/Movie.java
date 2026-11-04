@@ -21,11 +21,11 @@ public class Movie {
     public Movie(){}
 
     public Movie(Long id, String title, String director, Integer year, Double rating) {
-        this.id = id;
-        this.title = title;
-        this.director = director;
-        this.year = year;
-        this.rating = rating;
+        this.setId(id);
+        this.setTitle(title);
+        this.setDirector(director);
+        this.setYear(year);
+        this.setRating(rating);
     }
 
     public Movie(Long id, String title, String director, Integer year) {
@@ -34,9 +34,9 @@ public class Movie {
 
     // Método utilitário para atualização (Encapsulamento de regras)
     public void updateData(String title, String director, Integer year) {
-        this.title = title;
-        this.director = director;
-        this.year = year;
+        this.setTitle(title);
+        this.setDirector(director);
+        this.setYear(year);
     }
 
     public Long getId() {

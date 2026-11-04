@@ -29,11 +29,6 @@ public class MovieService {
     }
 
     @Transactional(readOnly = true)
-    public List<MovieResponse> findAll() {
-        return this.findAll(null);
-    }
-
-    @Transactional(readOnly = true)
     public Optional<MovieResponse> findById(Long id) {
         return repository.findById(id).map(MovieResponse::fromDomain);
     }
