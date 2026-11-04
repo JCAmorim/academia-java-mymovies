@@ -1,53 +1,79 @@
 package pt.rumos.mymovies.model;
-
-public class Movie {
-    //No pacote com.academia.mymovies.model,
-    // crie o record Movie com os atributos id (Long),
-    // title (String), director (String) e
-    // year (Integer).
-    private Long id;
-    private String title;
-    private String director;
-    private int year;
-    Double rating;
+import jakarta.persistence.*;
 
 
-    public Movie(long id, String title, String director, int year) {
-        this.id = id;
-        this.title = title;
-        this.director = director;
-        this.year = year;
-    }
 
-    public Long getId() {
-        return id;
-    }
+    @Entity
+    @Table(name = "movies")
+    public class Movie {
 
-    public String getTitle() {
-        return title;
-    }
+        @Id
+        @GeneratedValue(strategy = GenerationType.IDENTITY)
+        private Long id;
 
-    public String getDirector() {
-        return director;
-    }
+        @Column(name = "title", nullable = false, length = 120)
+        private String title;
 
-    public int getYear() {
-        return year;
-    }
+        @Column(name = "director", nullable = false)
+        private String director;
 
-    public void setTitle(String title) {
-        this.title = title;
-    }
+        @Column(name = "release_year", nullable = false)
+        private Integer year;
 
-    public void setDirector(String director) {
-        this.director = director;
-    }
+        @Column(name = "rating")
+        private Double rating;
 
-    public void setYear(int year) {
-        this.year = year;
-    }
 
-    public void setRating(Double rating) {
-        this.rating = rating;
-    }
+        // Construtor padrão (obrigatório para o JPA)
+        public Movie() {
+        }
+
+        // Construtor completo
+        public Movie(Long id, String title, String director, Integer year, Double rating) {
+            this.id = id;
+            this.title = title;
+            this.director = director;
+            this.year = year;
+            this.rating = rating;
+        }
+
+        public Long getId() {
+            return id;
+        }
+
+        public void setId(Long id) {
+            this.id = id;
+        }
+
+        public String getTitle() {
+            return title;
+        }
+
+        public void setTitle(String title) {
+            this.title = title;
+        }
+
+        public String getDirector() {
+            return director;
+        }
+
+        public void setDirector(String director) {
+            this.director = director;
+        }
+
+        public Integer getYear() {
+            return year;
+        }
+
+        public void setYear(Integer year) {
+            this.year = year;
+        }
+
+        public Double getRating() {
+            return rating;
+        }
+
+        public void setRating(Double rating) {
+            this.rating = rating;
+        }
 }
