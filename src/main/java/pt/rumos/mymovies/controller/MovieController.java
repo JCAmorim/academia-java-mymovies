@@ -6,6 +6,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import pt.rumos.mymovies.dto.MovieRequest;
 import pt.rumos.mymovies.dto.MovieResponse;
+import pt.rumos.mymovies.dto.RatingUpdateRequest;
 import pt.rumos.mymovies.model.Movie;
 
 import java.util.ArrayList;
@@ -138,6 +139,24 @@ public ResponseEntity<MovieResponse> update(
     }
 
 
+    @PatchMapping("/{id}/rating")
+    public ResponseEntity<MovieResponse> updateRating(@PathVariable Long id, @Valid @RequestBody RatingUpdateRequest request) {
 
-}
+        var optionalMovie = movies.stream()
+                .filter(movie -> movie.getId().equals(id))
+                .findFirst();
+
+        if (optionalMovie.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        }
+
+        Movie movie = optionalMovie.get();
+
+        movie.setRating(request.rating());
+
+        return ResponseEntity.ok(
+                MovieResponse.fromDomain(movie)
+        );
+     }
+    }
 
