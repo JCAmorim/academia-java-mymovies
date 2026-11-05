@@ -1,0 +1,20 @@
+meta {
+  name: Pesquisar filmes candidatos no TMDB
+  type: http
+  seq: 8
+}
+
+get {
+  url: {{baseURL}}/api/tmdb/movies/search?query=Interstellar
+  body: none
+  auth: inherit
+}
+
+params:query {
+  query: Interstellar
+}
+
+settings {
+  encodeUrl: true
+  forwardAuthorizationHeader: false
+}
