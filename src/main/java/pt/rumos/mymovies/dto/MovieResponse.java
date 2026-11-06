@@ -8,7 +8,8 @@ public record MovieResponse(
         Long id,
         String title,
         String director,
-        Integer year
+        Integer year,
+        Double rating
 ) {
 
     public static MovieResponse fromDomain(Movie movie) {
@@ -16,7 +17,8 @@ public record MovieResponse(
                 movie.getId(),
                 movie.getTitle(),
                 movie.getDirector(),
-                movie.getYear()
+                movie.getYear(),
+                movie.getRating()
         );
     }
 }
