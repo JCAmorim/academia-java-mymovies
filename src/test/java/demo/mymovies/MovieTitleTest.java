@@ -5,6 +5,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
 
 @ExtendWith(MockitoExtension.class)
 public class MovieTitleTest {
@@ -15,6 +16,4 @@ public class MovieTitleTest {
         var actual = rule.clean("  Alien  ");
         assertEquals("Alien", actual);
     }
-
-
 }
