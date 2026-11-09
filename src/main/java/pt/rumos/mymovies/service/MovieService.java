@@ -4,6 +4,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import pt.rumos.mymovies.dto.*;
+import pt.rumos.mymovies.exception.MovieNotFoundException;
 import pt.rumos.mymovies.model.Movie;
 import pt.rumos.mymovies.repository.MovieRepository;
 
@@ -29,8 +30,11 @@ public class MovieService {
     }
 
     @Transactional(readOnly = true)
-    public Optional<MovieResponse> findById(Long id) {
-        return repository.findById(id).map(MovieResponse::fromDomain);
+    public MovieResponse findById(Long id) {
+        Movie movie = repository.findById(id)
+                .orElseThrow(() -> new MovieNotFoundException(id));
+
+        return MovieResponse.fromDomain(movie);
     }
 
     @Transactional
