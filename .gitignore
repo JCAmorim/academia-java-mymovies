@@ -33,6 +33,6 @@ build/
 ### VS Code ###
 .vscode/
 
-### Chave privada de geracao JWT
-*private.pem
+### Chave privada de geracao Jwt
+*.pem
 
