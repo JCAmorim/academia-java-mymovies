@@ -5,14 +5,18 @@ meta {
 }
 
 patch {
-  url: {{baseURL}}/api/movies/22/rating
+  url: {{baseURL}}/api/movies/21/rating
   body: json
-  auth: inherit
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{user_token}}
 }
 
 body:json {
   {
-    "rating": 10.0
+    "rating": 9.0
   }
 }
 

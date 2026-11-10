@@ -1,13 +1,17 @@
 package pt.rumos.mymovies.controller;
 
 import jakarta.validation.Valid;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.web.bind.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import pt.rumos.mymovies.dto.MovieRequest;
 import pt.rumos.mymovies.dto.MovieResponse;
 import pt.rumos.mymovies.dto.RatingUpdateRequest;
 import pt.rumos.mymovies.service.MovieService;
+import org.springframework.security.oauth2.jwt.Jwt;
 
 import java.net.URI;
 import java.util.List;
@@ -17,6 +21,7 @@ import java.util.List;
 public class MovieController {
 
     private final MovieService movieService;
+    private static final Logger log = LoggerFactory.getLogger(MovieController.class);
 
     public MovieController(MovieService movieService) {
         this.movieService = movieService;
@@ -90,7 +95,10 @@ public class MovieController {
     }
 
     @PatchMapping("/{id}/rating")
-    public ResponseEntity<MovieResponse> updateRating(@PathVariable Long id, @Valid @RequestBody RatingUpdateRequest request) {
+    public ResponseEntity<MovieResponse> updateRating(@PathVariable Long id, @Valid @RequestBody RatingUpdateRequest request, @AuthenticationPrincipal Jwt jwt) {
+        String userEmail = jwt.getSubject(); // Extrai o "sub" do JWT (ex: aluno@rumos.pt)
+        log.info("Registo de avaliação recebido do utilizador: {} para o filme ID: {}", userEmail, id);
+
         var optionalMovieResponse = movieService.updateRating(id,request);
 
         if (optionalMovieResponse.isEmpty()) {
@@ -98,4 +106,5 @@ public class MovieController {
         }
         return ResponseEntity.ok(optionalMovieResponse.get());
     }
+
 }
