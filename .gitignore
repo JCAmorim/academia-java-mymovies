@@ -34,5 +34,5 @@ build/
 .vscode/
 
 ### Chave privada de geracao Jwt
-*.pem
+classroom-private.pem
 
