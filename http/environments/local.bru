@@ -5,3 +5,11 @@ vars {
   ''')
   baseURL: localhost:8080
 }
+vars:secret [
+  @description('Token de acesso dos alunos a API MyMovies')
+  user_token,
+  @description('Token de acesso expirado a API MyMovies')
+  expired_token,
+  @description('Token Admin da API MyMovies')
+  admin_token
+]
