@@ -41,11 +41,7 @@ public class MovieController {
      */
     @GetMapping("/{id}")
     public ResponseEntity<MovieResponse> getById(@PathVariable Long id) {
-        var optionalMovie = movieService.findById(id);
-        if (optionalMovie.isEmpty()) {
-            return ResponseEntity.notFound().build();
-        }
-        return ResponseEntity.ok(optionalMovie.get());
+        return ResponseEntity.ok(movieService.findById(id));
     }
 
 
