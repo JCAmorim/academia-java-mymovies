@@ -16,7 +16,8 @@
 ## Pré-Requisito
 
 * Instalação do Git na máquina local
- - https://git-scm.com/install/ 
+
+  https://git-scm.com/install/ 
 
 ---
 

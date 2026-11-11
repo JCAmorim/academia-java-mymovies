@@ -1,4 +1,5 @@
 package pt.rumos.mymovies.model;
+
 import jakarta.persistence.*;
 
 
@@ -23,57 +24,64 @@ import jakarta.persistence.*;
         @Column(name = "rating")
         private Double rating;
 
+    public Movie(){}
 
-        // Construtor padrão (obrigatório para o JPA)
-        public Movie() {
-        }
+    public Movie(Long id, String title, String director, Integer year, Double rating) {
+        this.setId(id);
+        this.setTitle(title);
+        this.setDirector(director);
+        this.setYear(year);
+        this.setRating(rating);
+    }
 
-        // Construtor completo
-        public Movie(Long id, String title, String director, Integer year, Double rating) {
-            this.id = id;
-            this.title = title;
-            this.director = director;
-            this.year = year;
-            this.rating = rating;
-        }
+    public Movie(Long id, String title, String director, Integer year) {
+        this(id, title, director, year, null);
+    }
 
-        public Long getId() {
-            return id;
-        }
+    // Método utilitário para atualização (Encapsulamento de regras)
+    public void updateData(String title, String director, Integer year) {
+        this.setTitle(title);
+        this.setDirector(director);
+        this.setYear(year);
+    }
 
-        public void setId(Long id) {
-            this.id = id;
-        }
+    public Long getId() {
+        return id;
+    }
 
-        public String getTitle() {
-            return title;
-        }
+    public void setId(Long id) {
+        this.id = id;
+    }
 
-        public void setTitle(String title) {
-            this.title = title;
-        }
+    public String getTitle() {
+        return title;
+    }
 
-        public String getDirector() {
-            return director;
-        }
+    public void setTitle(String title) {
+        this.title = title;
+    }
 
-        public void setDirector(String director) {
-            this.director = director;
-        }
+    public String getDirector() {
+        return director;
+    }
 
-        public Integer getYear() {
-            return year;
-        }
+    public void setDirector(String director) {
+        this.director = director;
+    }
 
-        public void setYear(Integer year) {
-            this.year = year;
-        }
+    public Integer getYear() {
+        return year;
+    }
 
-        public Double getRating() {
-            return rating;
-        }
+    public void setYear(Integer year) {
+        this.year = year;
+    }
 
-        public void setRating(Double rating) {
-            this.rating = rating;
-        }
+    public Double getRating() {
+        return rating;
+    }
+
+    public void setRating(Double rating) {
+        this.rating = rating;
+    }
 }

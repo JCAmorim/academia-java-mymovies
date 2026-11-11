@@ -1,0 +1,33 @@
+meta {
+  name: Lista Filmes
+  type: http
+  seq: 1
+}
+
+get {
+  url: {{baseURL}}/api/movies
+  body: none
+  auth: none
+}
+
+docs {
+    --- Teste 1: Listar Todos
+  
+    GET http://localhost:8080/api/movies
+  
+    --- Teste 2: Buscar por ID Existente
+  
+    GET http://localhost:8080/api/movies/1
+  
+    --- Teste 3: Buscar por ID Inexistente
+  
+    GET http://localhost:8080/api/movies/999
+  
+    --- Teste 4: Pesquisar Filmes contendo 'matrix'
+  
+    GET http://localhost:8080/api/movies/search?title=matrix
+  
+    --- Teste 5: Pesquisar Filmes contendo 'Dune'
+  
+    GET http://localhost:8080/api/movies/search?title=Dune
+}

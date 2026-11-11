@@ -19,4 +19,9 @@ public class MyMoviesApplication {
         return RestClient.builder();
     }
 
+    // Adicione este Bean para o Spring saber como construir o RestClient.Builder
+    @Bean
+    public RestClient.Builder restClientBuilder() {
+        return RestClient.builder();
+    }
 }

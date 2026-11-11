@@ -6,7 +6,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public record TmdbMovie(
         long id,
-        String title,
+         String title,
         @JsonProperty("release_date") String releaseDate,
         String overview,
         @JsonProperty("vote_average") Double voteAverage

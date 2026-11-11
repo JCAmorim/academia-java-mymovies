@@ -5,3 +5,4 @@ public record MovieCandidateResponse(
         String title,
         String releaseDate
 ) {}
+

@@ -1,0 +1,17 @@
+meta {
+  name: Importar filme do TMDB para MyMovies
+  type: http
+  seq: 9
+}
+
+post {
+  url: {{baseURL}}/api/tmdb/movies/529107/import
+  body: none
+  auth: inherit
+}
+
+settings {
+  encodeUrl: true
+  timeout: 0
+  forwardAuthorizationHeader: false
+}

@@ -14,7 +14,7 @@ O **Bruno** é um cliente HTTP *Open Source* e *offline-first*. Ao contrário de
 ## Pré-Requisito
 
 * Instalação do Bruno na máquina local
- - https://www.usebruno.com/downloads 
+  https://www.usebruno.com/downloads 
 
 ---
 

@@ -1,0 +1,23 @@
+meta {
+  name: Atualiza Nota do Filme
+  type: http
+  seq: 7
+}
+
+patch {
+  url: {{baseURL}}/api/movies/22/rating
+  body: json
+  auth: inherit
+}
+
+body:json {
+  {
+    "rating": 10.0
+  }
+}
+
+settings {
+  encodeUrl: true
+  timeout: 0
+  forwardAuthorizationHeader: false
+}
