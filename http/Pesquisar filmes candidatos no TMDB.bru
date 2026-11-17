@@ -5,16 +5,17 @@ meta {
 }
 
 get {
-  url: {{baseURL}}/api/tmdb/movies/search?query=Interstellar
+  url: {{baseURL}}/api/tmdb/movies/search?query=matrix
   body: none
   auth: inherit
 }
 
 params:query {
-  query: Interstellar
+  query: matrix
 }
 
 settings {
   encodeUrl: true
+  timeout: 0
   forwardAuthorizationHeader: false
 }
