@@ -5,14 +5,18 @@ meta {
 }
 
 post {
-  url: {{baseURL}}/api/movies
+  url: {{dockerURL}}/api/movies
   body: json
-  auth: inherit
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{admin_token}}
 }
 
 body:json {
   {
-      "title": " ",
+      "title": "teste",
       "director": "Braulio",
       "year": 2026
   }

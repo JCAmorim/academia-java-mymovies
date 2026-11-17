@@ -1,0 +1,52 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mymovies-api
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: mymovies-api
+  template:
+    metadata:
+      labels:
+        app: mymovies-api
+    spec:
+      containers:
+      - name: mymovies-api
+        image: my-movies:aula8
+        imagePullPolicy: IfNotPresent
+        ports:
+        - containerPort: 8080
+        env:
+        - name: SPRING_PROFILES_ACTIVE
+          value: "postgres"
+        - name: SPRING_DATASOURCE_URL
+          value: "jdbc:postgresql://db:5432/mymovies"
+        - name: POSTGRES_USER
+          valueFrom:
+            secretKeyRef:
+              name: mymovies-secrets
+              key: POSTGRES_USER
+        - name: POSTGRES_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: mymovies-secrets
+              key: POSTGRES_PASSWORD
+        - name: TMDB_TOKEN
+          valueFrom:
+            secretKeyRef:
+              name: mymovies-secrets
+              key: TMDB_TOKEN
+        readinessProbe:
+          httpGet:
+            path: /actuator/health
+            port: 8080
+          initialDelaySeconds: 15
+          periodSeconds: 5
+        livenessProbe:
+          httpGet:
+            path: /actuator/health
+            port: 8080
+          initialDelaySeconds: 70
+          periodSeconds: 10
